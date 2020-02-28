@@ -9,7 +9,11 @@ class Instruction:
 class Spoon:
   def __init__(self,code,symbol0="0",symbol1="1"):
     with open(code,"r") as f:
-      self.code = f.read().rstrip()
+      raw_code = f.read().rstrip()
+    self.code=""
+    for letter in raw_code:
+      if letter == symbol0 or symbol1:
+        self.code+=letter
     self.symbol0 = symbol0
     self.symbol1 = symbol1
     self.PC = 0
@@ -33,6 +37,12 @@ class Spoon:
     
     inst = Instruction(symbol0*2+symbol1+symbol0*2,self.whileStart)
     self.instructionList.append(inst)
+    inst = Instruction(symbol0*2+symbol1+symbol0+symbol1*4,self.exit_program)
+    self.instructionList.append(inst)
+    
+
+  def exit_program(self):
+    sys.exit(0)
     #we don't actually look for the while end here
   #  inst = Instruction(symbol0*2+symbol1*2,self.whileEnd)
   #  self.instructionList.append(inst)
@@ -99,6 +109,7 @@ class Spoon:
       self.executeOneInstruction()
 
 if __name__ == "__main__":
-  #j = Spoon("code.bin")
+  j = Spoon("code.bin")
+  j.runIt()
   j = Spoon("test.bin",symbol0="_",symbol1="-")
   j.runIt()
